@@ -1,0 +1,37 @@
+name: RSSB Auto Updater
+
+on:
+  schedule:
+    - cron: '*/2 * * * *'  # हर 30 मिनट में चलेगा
+  workflow_dispatch:      # मैन्युअल बटन भी दिखेगा टेस्टिंग के लिए
+
+permissions:
+  contents: write
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Libraries
+        run: pip install -r requirements.txt
+
+      - name: Run Scraper Script
+        run: python update_results.py
+        # यह script 'exam_data.json' फाइल बनाएगी
+
+      - name: Save & Commit Data
+        run: |
+          git config --global user.name "RSSB Bot"
+          git config --global user.email "bot@github.com"
+          git add exam_data.json
+          # अगर कोई नया डेटा है, तभी कमिट करें
+          git diff --quiet && git diff --staged --quiet || (git commit -m "New Result Found" && git push)
