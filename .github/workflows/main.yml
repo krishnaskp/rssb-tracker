@@ -2,7 +2,7 @@ name: RSSB Auto Updater
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # हर 30 मिनट में चलेगा
+    - cron: '*/30 * * * *'  # हर 30 मिनट में चलेगा
   workflow_dispatch:      # मैन्युअल बटन भी दिखेगा टेस्टिंग के लिए
 
 permissions:
